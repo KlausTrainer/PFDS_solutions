@@ -34,7 +34,7 @@ member(X, TreeDict, NodePtr, Candidate) ->
     _ ->
         case dict:fetch(NodePtr, TreeDict) of
         {NodeValue, LeftChildPtr, _RightChildPtr} when X < NodeValue ->
-            member(X, TreeDict, LeftNodePtr, Candidate);
+            member(X, TreeDict, LeftChildPtr, Candidate);
         {_NodeValue, _LeftChildPtr, RightChildPtr} ->
             Candidate1 = NodePtr,
             member(X, TreeDict, RightChildPtr, Candidate1)
@@ -43,13 +43,13 @@ member(X, TreeDict, NodePtr, Candidate) ->
 
 
 test_member() ->
-    D = dict:from_list([{1, {"Der", nil, nil}}, {11, {"müde", nil, nil}}, {3, {"Leib", nil, nil}}, {9, {"findet", nil, nil}}, {7, {"ein", nil, nil}}, {4, {"Schlafkissen", 2, 6}}, {16, {"überall", 8, nil}}, {6, {"doch", 5, 7}}, {14, {"wenn", 13, 15}}, {5, {"der", nil, nil}}, {2, {"Geist", 1, 3}}, {11, {"müde", nil, nil}}, {10, {"ist", 9, 11}}, {15, {"wo", nil, nil}}, {13, {"soll", nil, nil}}, {8, {"er", 4, 12}}, {12, {"ruhen", 10, 14}}]),
-    T1 = member("Schlafkissen", D, 16) =:= 4,
-    T2 = member("überall", D, 16) =:= 16,
-    T3 = member("foo", D, 16) =:= nil,
-    T4 = member("müde", D, 16) =:= 11,
-    T5 = member("doch", D, 16) =:= 6,
-    T6 = member("bar", D, 16) =:= nil,
+    D = dict:from_list([{1, {"Der", nil, nil}}, {11, {"müde", nil, nil}}, {3, {"Leib", nil, nil}}, {9, {"findet", nil, nil}}, {7, {"ein", nil, nil}}, {4, {"Schlafkissen", 2, 6}}, {16, {"überall", nil, nil}}, {6, {"doch", 5, 7}}, {14, {"wenn", 13, 15}}, {5, {"der", nil, nil}}, {2, {"Geist", 1, 3}}, {11, {"müde", nil, nil}}, {10, {"ist", 9, 11}}, {15, {"wo", nil, 16}}, {13, {"soll", nil, nil}}, {8, {"er", 4, 12}}, {12, {"ruhen", 10, 14}}]),
+    T1 = member("Schlafkissen", D, 8) =:= 4,
+    T2 = member("überall", D, 8) =:= 16,
+    T3 = member("foo", D, 8) =:= nil,
+    T4 = member("müde", D, 8) =:= 11,
+    T5 = member("doch", D, 8) =:= 6,
+    T6 = member("bar", D, 8) =:= nil,
     Pred = fun(E) -> case E of true -> true; _ -> false end end,
     L1 = [T1, T2, T3, T4, T5, T6],
     case lists:dropwhile(Pred, L1) of
